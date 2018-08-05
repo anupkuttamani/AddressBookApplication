@@ -48,4 +48,8 @@ public class AddressBook implements AddressBookOperationsCommon {
             contacts.remove(person);
         }
     }
+
+    public String getAddressBookName() {
+        return addressBookName;
+    }
 }

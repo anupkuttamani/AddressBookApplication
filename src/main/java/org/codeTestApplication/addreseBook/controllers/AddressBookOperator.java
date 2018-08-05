@@ -2,35 +2,34 @@ package org.codeTestApplication.addreseBook.controllers;
 
 import org.codeTestApplication.addreseBook.beans.Person;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by anup on 05-Aug-18.
  */
 public class AddressBookOperator {
 
-    public List<AddressBook> simpleAddressBook;
+    public List<AddressBook> simpleAddressBooks;
 
 
     public AddressBookOperator() {
-        this.simpleAddressBook = new ArrayList<AddressBook>();
+        this.simpleAddressBooks = new ArrayList<AddressBook>();
     }
 
 
     public void addAddressBook(AddressBook addressBook) {
 
-        simpleAddressBook.add(addressBook);
+        simpleAddressBooks.add(addressBook);
 
     }
 
     public boolean removeAddressBook(AddressBook addressBook) {
 
-        if (!simpleAddressBook.isEmpty()) {
+        if (simpleAddressBooks.isEmpty()) {
             return false;
         }
 
-        return simpleAddressBook.remove(addressBook);
+        return simpleAddressBooks.remove(addressBook);
 
     }
 
@@ -38,7 +37,7 @@ public class AddressBookOperator {
 
         List<Person> allContacts = new ArrayList<Person>();
 
-        simpleAddressBook.forEach(ab -> {
+        simpleAddressBooks.forEach(ab -> {
             allContacts.addAll(ab.getAllContacts());
         });
         return allContacts;
@@ -48,7 +47,7 @@ public class AddressBookOperator {
 
         List<Person> contacts = new ArrayList<Person>();
 
-        simpleAddressBook.forEach(ab -> {
+        simpleAddressBooks.forEach(ab -> {
             if (addressBook.equals(ab)) {
                 contacts.addAll(ab.getAllContacts());
             }
@@ -65,5 +64,39 @@ public class AddressBookOperator {
     public void printContactsByAddressBook(AddressBook addressBook) {
 
         getContactByAddressBook(addressBook).forEach(c -> System.out.println(c));
+    }
+
+
+    private Set<Person> getUniqueContacts() {
+
+        Set<Person> uniqueContacts = new TreeSet<Person>();
+        Set<Person> commonContacts = new HashSet<Person>();
+        Set<Person> allContacts = new HashSet<Person>();
+        List<Person> contacts = null;
+
+        for (AddressBook addrBook : simpleAddressBooks) {
+
+            contacts = addrBook.getAllContacts();
+            allContacts.addAll(uniqueContacts);
+            allContacts.addAll(contacts);
+
+            contacts.retainAll(uniqueContacts);
+            commonContacts.addAll(contacts);
+            allContacts.removeAll(commonContacts);
+
+            uniqueContacts.clear();
+            uniqueContacts.addAll(allContacts);
+
+        }
+
+        return uniqueContacts;
+    }
+
+    public void printUniqueContacts() {
+        getUniqueContacts().stream().forEach(p -> System.out.println(p));
+    }
+
+    public List<AddressBook> getSimpleAddressBooks() {
+        return simpleAddressBooks;
     }
 }
